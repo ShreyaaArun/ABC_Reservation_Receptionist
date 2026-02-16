@@ -1,0 +1,96 @@
+{
+  "name": "create_reservation",
+  "nodes": [
+    {
+      "parameters": {
+        "tableId": "reservations",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "first_name",
+              "fieldValue": "={{ $json.firstName }}"
+            },
+            {
+              "fieldId": "last_name",
+              "fieldValue": "={{ $json.lastName }}"
+            },
+            {
+              "fieldId": "email",
+              "fieldValue": "={{ $json.email }}"
+            },
+            {
+              "fieldId": "startDateTime",
+              "fieldValue": "={{ \n  DateTime\n  .fromISO($json.startDate, { zone: \"America/Chicago\" })\n  .set({ hour: 15, minute: 0 })\n  .toISO({ includeOffset: true })\n}}"
+            },
+            {
+              "fieldId": "endDateTime",
+              "fieldValue": "={{ \n  DateTime\n  .fromISO($json.endDate, { zone: \"America/Chicago\" })\n  .set({ hour: 11, minute: 0 })\n  .toISO({ includeOffset: true })\n}}"
+            },
+            {
+              "fieldId": "room_id",
+              "fieldValue": "={{ $json.room_id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        0,
+        -128
+      ],
+      "id": "1ee8ed71-e3a0-47fc-82ae-70fb01101caa",
+      "name": "Create a row",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ucKUnW7eP2SyTnrI",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -176,
+        -128
+      ],
+      "id": "abae9bf2-cf3a-4941-bb7d-3f96fdbc8a37",
+      "name": "When Executed by Another Workflow"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Create a row": {
+      "main": [
+        []
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Create a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "adeec890-66f7-4412-9477-fedf267e996f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "35a34d973b0ae483f7fad5122f5088a29a9f3cc45d146dcee08b1b0168e8c30c"
+  },
+  "id": "nuGVPUj59LAXKogz",
+  "tags": []
+}

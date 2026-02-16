@@ -1,0 +1,127 @@
+{
+  "name": "check_availability",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b3159031-1166-436b-8e6c-fc67d159800b",
+              "name": "room_type",
+              "value": "={{ $json.room_type }}",
+              "type": "string"
+            },
+            {
+              "id": "7672732c-fbb5-41c3-ba8b-d97b62f5753b",
+              "name": "approved_id",
+              "value": "={{ $json.approved_id }}",
+              "type": "string"
+            },
+            {
+              "id": "329f54db-5b64-488b-95e6-3f341d96469c",
+              "name": "startDate",
+              "value": "={{ $json.startDate }}",
+              "type": "string"
+            },
+            {
+              "id": "c443ac17-c592-45da-a445-3c03e2a551cc",
+              "name": "endDate",
+              "value": "={{ $json.endDate }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -672,
+        -160
+      ],
+      "id": "ef2b64d3-d7a9-4bdd-8fc9-f57d6ce5db29",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://zhhrbxoqjgkwmbpfeojq.supabase.co/rest/v1/rpc/check_availability",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "supabaseApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"input\": {\n    \"room_type\": {{ $json.room_type ? `\"${$json.room_type}\"` : \"null\" }},\n    \"approved_id\": {{$json.approved_id ? `\"${$json.approved_id}\"` : \"null\" }}, \n    \"startDate\": {{$json.startDate ? `\"${$json.startDate}\"` : \"null\" }}, \n    \"endDate\": {{$json.endDate ? `\"${$json.endDate}\"` : \"null\" }}\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -496,
+        -160
+      ],
+      "id": "fbbb7211-c51f-49ad-9cf6-ab155ef79742",
+      "name": "HTTP Request",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ucKUnW7eP2SyTnrI",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -864,
+        -160
+      ],
+      "id": "74aefd6d-f54c-4a15-b156-295bcfee4377",
+      "name": "When Executed by Another Workflow"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        []
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "96bab1b4-24bc-48f2-9fa0-56e8a84ccec0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "35a34d973b0ae483f7fad5122f5088a29a9f3cc45d146dcee08b1b0168e8c30c"
+  },
+  "id": "bUyUw0upqj3JLCLY",
+  "tags": []
+}

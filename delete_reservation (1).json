@@ -1,0 +1,77 @@
+{
+  "name": "delete_reservation",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://zhhrbxoqjgkwmbpfeojq.supabase.co/rest/v1/rpc/delete_reservation",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "supabaseApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"payload\": {\n    \"reservation_id\": {{ $json.reservation_id }}\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        400,
+        -624
+      ],
+      "id": "e9f2e516-1389-4d2f-813a-9253318cf5d6",
+      "name": "HTTP Request",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ucKUnW7eP2SyTnrI",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        192,
+        -624
+      ],
+      "id": "2d08fcef-e617-4200-90cb-06fe03723a3d",
+      "name": "When Executed by Another Workflow"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        []
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "ee3ffa0b-d31f-49a6-aa93-486be0619eec",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "35a34d973b0ae483f7fad5122f5088a29a9f3cc45d146dcee08b1b0168e8c30c"
+  },
+  "id": "HwSxyIDJQfzOmC9d",
+  "tags": []
+}

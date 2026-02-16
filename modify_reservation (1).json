@@ -1,0 +1,77 @@
+{
+  "name": "modify_reservation",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://zhhrbxoqjgkwmbpfeojq.supabase.co/rest/v1/rpc/modify_reservation",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "supabaseApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"payload\": {\n    \"room_id\":{{ $json.room_id }} ,\n    \"startDate\": \"{{ $json.startDate}}\",\n    \"endDate\": \"{{ $json.endDate}}\",\n    \"reservation_id\": \"{{ $json.reservation_id }}\"\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        192,
+        -1120
+      ],
+      "id": "05bb1d2e-5279-43f4-81c2-e3bf4e7d4586",
+      "name": "HTTP Request",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ucKUnW7eP2SyTnrI",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -32,
+        -1120
+      ],
+      "id": "96fe542d-5216-4028-a90b-4e5a223ca457",
+      "name": "When Executed by Another Workflow"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        []
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "a9dc61fb-736e-4e7a-86d8-aa80d6e9c2ce",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "35a34d973b0ae483f7fad5122f5088a29a9f3cc45d146dcee08b1b0168e8c30c"
+  },
+  "id": "sYcLKKPrOSfdXrya",
+  "tags": []
+}

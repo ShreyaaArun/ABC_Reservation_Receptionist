@@ -1,0 +1,2934 @@
+{
+  "name": "orchestrator",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "e6842346-2f62-48a1-bfc2-ec2d3baf3f57",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -80,
+        16
+      ],
+      "id": "de9f8abf-3e55-433d-89e5-8b82dedf610a",
+      "name": "Webhook",
+      "webhookId": "e6842346-2f62-48a1-bfc2-ec2d3baf3f57"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "bUyUw0upqj3JLCLY",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/bUyUw0upqj3JLCLY",
+          "cachedResultName": "check_availability"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        592,
+        -1184
+      ],
+      "id": "a5b799fb-7c5f-4e4e-95db-4c3cdc5675f0",
+      "name": "Call 'check_availability'"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "bUyUw0upqj3JLCLY",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/bUyUw0upqj3JLCLY",
+          "cachedResultName": "check_availability"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1200,
+        -880
+      ],
+      "id": "3327cce2-b881-42d0-947c-08eba3c44134",
+      "name": "Call 'check_availability'1"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "nuGVPUj59LAXKogz",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/nuGVPUj59LAXKogz",
+          "cachedResultName": "create_reservation"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        2208,
+        -1072
+      ],
+      "id": "88c6bbdb-119a-4bee-bbe6-78f5b38e6733",
+      "name": "Call 'create_reservation'"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $node['Webhook'].json.body.message.toolCalls[0].id }}\",\n      \"result\": \"Reservation successfully created. Confirmation number is {{ $json.id }}. Room number is {{ $('Call \\'check_availability\\'1').item.json.room_number }}. The price is {{ $('Call \\'check_availability\\'1').item.json.base_price }}\"\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2576,
+        -1264
+      ],
+      "id": "77385068-a6f6-4e61-b967-de3e6b9716b8",
+      "name": "Create_Success"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $node['Webhook'].json.body.message.toolCalls[0].id }}\",\n      \"result\": \"Reservation could not be made.\"\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2576,
+        -1008
+      ],
+      "id": "ddea62f4-f4bc-4028-a301-602cc07cdb85",
+      "name": "Create_Fail"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "zL6FHWytWP1ltGBH",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/zL6FHWytWP1ltGBH",
+          "cachedResultName": "confirm_reservation"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1808,
+        -496
+      ],
+      "id": "2581d158-428d-4251-9751-eccb8e4a1d38",
+      "name": "Call 'confirm_reservation'"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $('Webhook').item.json.body.message.toolCalls[0].id }}\",\n      \"result\": \"Reservation found for {{ $json.reservations[0].first_name }} {{ $json.reservations[0].last_name }} from {{ \n  new Date($json.reservations[0].startDateTime)\n    .toLocaleString('en-US', { timeZone: 'America/Chicago' }) \n}}\n to {{ \n  new Date($json.reservations[0].endDateTime)\n    .toLocaleString('en-US', { timeZone: 'America/Chicago' }) \n}}\n at room {{ $json.reservations[0].room_number}}. Your confirmation number is {{ $json.reservations[0].reservation_id }}\"\n    }\n  ]\n}\n",
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2320,
+        -480
+      ],
+      "id": "4193541f-b4a8-4dba-b877-8e2d444cdeca",
+      "name": "reservation_found"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $('Webhook').item.json.body.message.toolCalls[0].id }}\",\n      \"result\": \"No reservation exists for this information. Would you like to make a new booking today?\"\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2320,
+        -688
+      ],
+      "id": "eca2b253-7825-4ccc-9d4e-2746e8409723",
+      "name": "reservation_not_found"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2592,
+        -688
+      ],
+      "id": "82e22482-2448-4131-9f32-e4fd145fbb1e",
+      "name": "Confirm_Fail"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2592,
+        -480
+      ],
+      "id": "8a63abe9-6d65-4ec7-afe9-70f34659eded",
+      "name": "Confirm_Success"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2592,
+        -256
+      ],
+      "id": "a302808e-3b4e-4b73-a416-f39c78be6e90",
+      "name": "Confirm_More"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "zL6FHWytWP1ltGBH",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/zL6FHWytWP1ltGBH",
+          "cachedResultName": "confirm_reservation"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1760,
+        400
+      ],
+      "id": "8cad7386-f13b-4237-abbd-80d1558dd1db",
+      "name": "Call 'confirm_reservation'1"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $('Webhook').item.json.body.message.toolCalls[0].id }}\",\n      \"result\": \"No reservation exists for this information. Would you like to make a new booking today?\"\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2448,
+        -48
+      ],
+      "id": "d3e75e74-1132-4847-b9f0-f01091d8643b",
+      "name": "reservation_not_found1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2912,
+        -48
+      ],
+      "id": "58364276-626a-4397-b006-0d15549f6a79",
+      "name": "Confirm_Fail1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2896,
+        768
+      ],
+      "id": "62f6d91f-fa2f-4814-ab47-adfcf35b39be",
+      "name": "Confirm_More1"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "bUyUw0upqj3JLCLY",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/bUyUw0upqj3JLCLY",
+          "cachedResultName": "check_availability"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        2560,
+        256
+      ],
+      "id": "bba9f34a-8185-483d-a19d-c58fce885c1a",
+      "name": "Call 'check_availability'2"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $node['Webhook'].json.body.message.toolCalls[0].id }}\",\n      \"result\": \"An availability does not exist for this time slot.\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        3216,
+        480
+      ],
+      "id": "63f16f3e-ce49-4078-b7d2-fe4e6947a1ae",
+      "name": "Avail_Fail1"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $node['Webhook'].json.body.message.toolCalls[0].id }}\",\n      \"result\": \"We do not have the {{ $('availability_merge').item.json.requested_room_type }} room at that time, but we have others.\"\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        3216,
+        656
+      ],
+      "id": "a19fe842-21be-4f3c-878d-d596ad87bacd",
+      "name": "Avail_Alt1"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "sYcLKKPrOSfdXrya",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/sYcLKKPrOSfdXrya",
+          "cachedResultName": "modify_reservation"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        3424,
+        304
+      ],
+      "id": "c899f37a-f159-4676-ab3a-5492d2ec28cb",
+      "name": "Call 'modify_reservation'"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $node['Webhook'].json.body.message.toolCalls[0].id }}\",\n      \"result\": \"Update successfully made. You have a reservation from {{ $json.startDateTime }} to {{ $json.endDateTime }} in room {{ $json.room_number }}, which is a {{ $json.room_type }} room. Once again, your confirmation number is {{ $json.reservation_id }}.\"\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        3840,
+        208
+      ],
+      "id": "85c6fc95-a851-4537-957f-c8274341e49c",
+      "name": "Modify_Success"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $node['Webhook'].json.body.message.toolCalls[0].id }}\",\n      \"result\": \"Update failed to be made.\"\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        3840,
+        384
+      ],
+      "id": "366d9f95-d450-4589-ab1c-01131d46af4c",
+      "name": "Modify_Fail"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "zL6FHWytWP1ltGBH",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/zL6FHWytWP1ltGBH",
+          "cachedResultName": "confirm_reservation"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        864,
+        976
+      ],
+      "id": "92c34e40-4c73-4eec-b1f2-e05dffa6d063",
+      "name": "Call 'confirm_reservation'2"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $('Webhook').item.json.body.message.toolCalls[0].id }}\",\n      \"result\": \"No reservation exists for this information. Would you like to make a new booking today?\"\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1424,
+        608
+      ],
+      "id": "12b19e06-588d-4f59-a651-9614de4a7651",
+      "name": "reservation_not_found2"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1696,
+        608
+      ],
+      "id": "d397db63-7a50-43db-8896-99a6182487cb",
+      "name": "Confirm_Fail2"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1568,
+        1504
+      ],
+      "id": "4bbabf00-0d35-4321-899b-60e63c3249c6",
+      "name": "Confirm_More2"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "HwSxyIDJQfzOmC9d",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/HwSxyIDJQfzOmC9d",
+          "cachedResultName": "delete_reservation"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        1600,
+        976
+      ],
+      "id": "6a19fe26-f621-46e3-8840-e04560a480d1",
+      "name": "Call 'delete_reservation'"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $node['Webhook'].json.body.message.toolCalls[0].id }}\",\n      \"result\": \"We do not have {{ $('Call \\'check_availability\\'').item.json.room_type }} rooms free during your requested date range, but we have others.\"\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1104,
+        -1072
+      ],
+      "id": "9ccb9f97-53da-4d50-9582-e397b4ff2dec",
+      "name": "Avail_Alt"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $node['Webhook'].json.body.message.toolCalls[0].id }}\",\n      \"result\": \"An availability does not exist for this date range.\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1104,
+        -1248
+      ],
+      "id": "40aefa2b-b6f4-45a9-b9f2-ac2ec0ca7a4a",
+      "name": "Avail_Fail"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $('Webhook').item.json.body.message.toolCalls[0].id }}\",\n      \"result\": \"Availability found for {{ $('Call \\'check_availability\\'').item.json.room_type }} room at room {{ $('Call \\'check_availability\\'').item.json.room_number }}. The base price of the room will be {{ $('Call \\'check_availability\\'').item.json.base_price }} dollars.\"\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1104,
+        -1440
+      ],
+      "id": "2f285867-8e5e-4ba7-be17-428150cb7feb",
+      "name": "Avail_Success"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $node['Webhook'].json.body.message.toolCalls[0].id }}\",\n      \"result\": \"An availability does not exist for this date range.\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1744,
+        -912
+      ],
+      "id": "68023e58-e322-48c4-adc7-621dce4907b1",
+      "name": "Avail_Fail2"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $node['Webhook'].json.body.message.toolCalls[0].id }}\",\n      \"result\": \"We do not have {{ $('set_availability_input1').item.json.room_type }} rooms free during your requested date range, but we have others.\"\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1744,
+        -736
+      ],
+      "id": "8c463759-451a-4fbb-9049-8fa6748c9b28",
+      "name": "Avail_Alt2"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "bUyUw0upqj3JLCLY",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/bUyUw0upqj3JLCLY",
+          "cachedResultName": "check_availability"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        2560,
+        448
+      ],
+      "id": "6420181e-f2e0-4ca8-9818-0270dbd6156b",
+      "name": "Call 'check_availability'3"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $('Webhook').item.json.body.message.toolCalls[0].id }}\",\n      \"result\": \"Multiple reservations found for this email. Please provide more details to identify the correct one.\"\n    }\n  ]\n}\n",
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2352,
+        -256
+      ],
+      "id": "f05303c5-30a4-40f8-886b-8b15f902359d",
+      "name": "reservation_alt"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $('Webhook').item.json.body.message.toolCalls[0].id }}\",\n      \"result\": \"Multiple reservations found for this email. Please provide more details to identify the correct one.\"\n    }\n  ]\n}\n",
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2656,
+        768
+      ],
+      "id": "8fe18c89-318f-4588-9f4d-f658989e33d8",
+      "name": "reservation_alt1"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $('Webhook').item.json.body.message.toolCalls[0].id }}\",\n      \"result\": \"Multiple reservations found for this email. Please provide more details to identify the correct one.\"\n    }\n  ]\n}\n",
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1360,
+        1504
+      ],
+      "id": "6b0c5bce-4bbc-492b-8144-c0c59c711af6",
+      "name": "reservation_alt2"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.message.toolCalls[0].function.arguments.operation }}",
+                    "rightValue": "check",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "41229b6f-8085-4d6a-96cf-05f9b055b8a7"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "cbd2f315-e221-4903-bae3-aec97b071752",
+                    "leftValue": "={{ $json.body.message.toolCalls[0].function.arguments.operation }}",
+                    "rightValue": "create",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "170b8115-8336-4974-8443-21a98026558a",
+                    "leftValue": "={{ $json.body.message.toolCalls[0].function.arguments.operation }}",
+                    "rightValue": "confirm",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "ee9df5ed-483f-492f-8760-7642f640be34",
+                    "leftValue": "={{ $json.body.message.toolCalls[0].function.arguments.operation }}",
+                    "rightValue": "modify",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "7bdb049a-5b27-465c-b8f2-925574e7407a",
+                    "leftValue": "={{ $json.body.message.toolCalls[0].function.arguments.operation }}",
+                    "rightValue": "delete",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        192,
+        -32
+      ],
+      "id": "ac7209c2-3f4f-40a6-9123-08c47431360f",
+      "name": "Operation_switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7b5bf557-82bd-4ac3-988d-ac29b9f4308e",
+              "name": "room_type",
+              "value": "={{ $json.body.message.toolCalls[0].function.arguments.roomType }}",
+              "type": "string"
+            },
+            {
+              "id": "213ee65d-bf4d-4ecf-a0f7-31f54d7b635c",
+              "name": "startDate",
+              "value": "={{ $json.body.message.toolCalls[0].function.arguments.startDate }}",
+              "type": "string"
+            },
+            {
+              "id": "6b99408f-237a-49d6-8517-e4d5ace9a594",
+              "name": "endDate",
+              "value": "={{ $json.body.message.toolCalls[0].function.arguments.endDate }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        336,
+        -1072
+      ],
+      "id": "57bb2475-f314-4c18-bdc4-6182a4a2db94",
+      "name": "set_availability_input"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4b338995-94df-4947-a88a-9d668ec4874c",
+              "name": "startDate",
+              "value": "={{ $json.body.message.toolCalls[0].function.arguments.startDate }}",
+              "type": "string"
+            },
+            {
+              "id": "c365b837-a9a6-4d75-bdd0-11353494fe36",
+              "name": "endDate",
+              "value": "={{ $json.body.message.toolCalls[0].function.arguments.endDate }}",
+              "type": "string"
+            },
+            {
+              "id": "7b5bf557-82bd-4ac3-988d-ac29b9f4308e",
+              "name": "room_type",
+              "value": "={{ $json.body.message.toolCalls[0].function.arguments.roomType }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        -832
+      ],
+      "id": "82669cd4-bc0a-451f-b5b8-1525195a1da9",
+      "name": "set_availability_input1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4b338995-94df-4947-a88a-9d668ec4874c",
+              "name": "startDate",
+              "value": "={{ $('Webhook').item.json.body.message.toolCalls[0].function.arguments.newStartDate}}",
+              "type": "string"
+            },
+            {
+              "id": "c365b837-a9a6-4d75-bdd0-11353494fe36",
+              "name": "endDate",
+              "value": "={{ $('Webhook').item.json.body.message.toolCalls[0].function.arguments.newEndDate }}",
+              "type": "string"
+            },
+            {
+              "id": "5f545e25-7c09-4cc9-a5ee-df9d04402c12",
+              "name": "approved_id",
+              "value": "={{ $('Call \\'confirm_reservation\\'1').item.json.reservations[0].reservation_id }}",
+              "type": "string"
+            },
+            {
+              "id": "fea7fb9a-a778-41e5-ae30-24287afb7ad1",
+              "name": "room_type",
+              "value": "={{ $('Webhook').item.json.body.message.toolCalls[0].function.arguments.roomType }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2336,
+        256
+      ],
+      "id": "081469d6-765d-4346-8b7c-d36fefc0543c",
+      "name": "set_availability_input2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4b338995-94df-4947-a88a-9d668ec4874c",
+              "name": "startDate",
+              "value": "={{ $('Webhook').item.json.body.message.toolCalls[0].function.arguments.newStartDate}}",
+              "type": "string"
+            },
+            {
+              "id": "c365b837-a9a6-4d75-bdd0-11353494fe36",
+              "name": "endDate",
+              "value": "={{ $('Webhook').item.json.body.message.toolCalls[0].function.arguments.newEndDate }}",
+              "type": "string"
+            },
+            {
+              "id": "5f545e25-7c09-4cc9-a5ee-df9d04402c12",
+              "name": "approved_id",
+              "value": "={{ $('Call \\'confirm_reservation\\'1').item.json.reservations[0].reservation_id }}",
+              "type": "string"
+            },
+            {
+              "id": "fea7fb9a-a778-41e5-ae30-24287afb7ad1",
+              "name": "room_type",
+              "value": "={{ $('Call \\'confirm_reservation\\'1').item.json.reservations[0].room_type }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2336,
+        448
+      ],
+      "id": "007fb352-6e4b-40ce-a8d3-440864ca3659",
+      "name": "set_availability_input3"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $node['Webhook'].json.body.message.toolCalls[0].id }}\",\n      \"result\": \"Reservation successfully canceled.\"\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2128,
+        848
+      ],
+      "id": "6788dba7-0300-4546-9ddd-55a2411e3f28",
+      "name": "Delete_Success"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $node['Webhook'].json.body.message.toolCalls[0].id }}\",\n      \"result\": \"Reservation could not be deleted.\"\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2128,
+        1088
+      ],
+      "id": "de97935b-c2d8-4101-9566-4483a0a324e3",
+      "name": "Delete_Fail"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "47c7b5e7-3a34-4591-91c9-02d5243a3e76",
+              "name": "room_id",
+              "value": "={{ $json.room_id }}",
+              "type": "number"
+            },
+            {
+              "id": "45fde06f-0c5e-4186-b6e4-5102563b1347",
+              "name": "email",
+              "value": "={{ $('Webhook').item.json.body.message.toolCalls[0].function.arguments.email }}",
+              "type": "string"
+            },
+            {
+              "id": "ba0b589c-1288-424e-8c90-c56065258871",
+              "name": "firstName",
+              "value": "={{ $('Webhook').item.json.body.message.toolCalls[0].function.arguments.firstName }}",
+              "type": "string"
+            },
+            {
+              "id": "6c46f937-8df6-4837-bd86-6d8e69fce174",
+              "name": "lastName",
+              "value": "={{ $('Webhook').item.json.body.message.toolCalls[0].function.arguments.lastName }}",
+              "type": "string"
+            },
+            {
+              "id": "4b338995-94df-4947-a88a-9d668ec4874c",
+              "name": "startDate",
+              "value": "={{ $('set_availability_input1').item.json.startDate }}",
+              "type": "string"
+            },
+            {
+              "id": "c365b837-a9a6-4d75-bdd0-11353494fe36",
+              "name": "endDate",
+              "value": "={{ $('set_availability_input1').item.json.endDate }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2000,
+        -1056
+      ],
+      "id": "15aa7696-5276-43f8-b6f7-0d8ee5952313",
+      "name": "set_create_input"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "94295d07-e6e6-4954-bd0b-7667d032214a",
+              "name": "room_id",
+              "value": "={{ $('availability_merge').item.json.room_id }}",
+              "type": "number"
+            },
+            {
+              "id": "3e67371c-13c1-4692-9595-3e649a0bccd5",
+              "name": "reservation_id",
+              "value": "={{ $('Call \\'confirm_reservation\\'1').item.json.reservations[0].reservation_id }}",
+              "type": "number"
+            },
+            {
+              "id": "3f33a2e1-47a9-4492-b3f3-163df4c7d6af",
+              "name": "startDate",
+              "value": "={{ $('Webhook').item.json.body.message.toolCalls[0].function.arguments.newStartDate }}",
+              "type": "string"
+            },
+            {
+              "id": "cb562530-9a2e-4e02-9a03-a38a37358dcd",
+              "name": "endDate",
+              "value": "={{ $('Webhook').item.json.body.message.toolCalls[0].function.arguments.newEndDate }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3216,
+        304
+      ],
+      "id": "3888d763-4b63-4354-bb26-35da8cc72a8f",
+      "name": "set_modify_input"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "13b2b7f3-acb4-443c-b8db-be8a6bee5ff4",
+              "name": "reservation_id",
+              "value": "={{ $('Call \\'confirm_reservation\\'2').item.json.reservations[0].reservation_id }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1376,
+        976
+      ],
+      "id": "493d2d3d-8109-4942-88cd-f58022a64551",
+      "name": "set_delete_input"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.status }}",
+                    "rightValue": "found",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "f51896fd-724a-4287-8016-98dcb018f7ac"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "found"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "e7de7a41-9ce9-45a4-a7e2-f7f4c4b122ba",
+                    "leftValue": "={{ $json.status }}",
+                    "rightValue": "not_found",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "not_found"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "335cd645-2a13-4f41-9a16-a461997b562c",
+                    "leftValue": "={{ $json.status }}",
+                    "rightValue": "alternative",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "alternative"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        832,
+        -1264
+      ],
+      "id": "a504a30a-8ca0-49af-b50d-7b54f3d920ab",
+      "name": "availability_switch"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.status }}",
+                    "rightValue": "found",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "f51896fd-724a-4287-8016-98dcb018f7ac"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "found"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "e7de7a41-9ce9-45a4-a7e2-f7f4c4b122ba",
+                    "leftValue": "={{ $json.status }}",
+                    "rightValue": "not_found",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "not_found"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "335cd645-2a13-4f41-9a16-a461997b562c",
+                    "leftValue": "={{ $json.status }}",
+                    "rightValue": "alternative",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "alternative"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        1472,
+        -928
+      ],
+      "id": "a4690a64-9997-4d30-9274-7a0c83cd603d",
+      "name": "availability_switch1"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.status }}",
+                    "rightValue": "not_found",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "5357f025-ab8f-443b-aa1d-227d901fee3e"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "069476b7-913e-4496-bac8-da8df8de9314",
+                    "leftValue": "={{ $json.status }}",
+                    "rightValue": "single",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "0aef7d7f-ae96-40a8-b633-30e8a09668f7",
+                    "leftValue": "={{ $json.status }}",
+                    "rightValue": "ambiguous",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        2048,
+        -512
+      ],
+      "id": "7602eb87-1a5d-4904-94c4-ee8ee85f9a66",
+      "name": "confirm_switch"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.count }}",
+                    "rightValue": 0,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    },
+                    "id": "5357f025-ab8f-443b-aa1d-227d901fee3e"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "069476b7-913e-4496-bac8-da8df8de9314",
+                    "leftValue": "={{ $json.count }}",
+                    "rightValue": 1,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "0aef7d7f-ae96-40a8-b633-30e8a09668f7",
+                    "leftValue": "={{ $json.count }}",
+                    "rightValue": 1,
+                    "operator": {
+                      "type": "number",
+                      "operation": "gt"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        1920,
+        384
+      ],
+      "id": "a9612db8-2f6d-491c-bfbd-a4327d116724",
+      "name": "confirm_switch1"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.count }}",
+                    "rightValue": 0,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    },
+                    "id": "5357f025-ab8f-443b-aa1d-227d901fee3e"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "069476b7-913e-4496-bac8-da8df8de9314",
+                    "leftValue": "={{ $json.count }}",
+                    "rightValue": 1,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "0aef7d7f-ae96-40a8-b633-30e8a09668f7",
+                    "leftValue": "={{ $json.count }}",
+                    "rightValue": 1,
+                    "operator": {
+                      "type": "number",
+                      "operation": "gt"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        1072,
+        960
+      ],
+      "id": "5c889db0-971d-4231-8870-b3d38991739e",
+      "name": "confirm_switch2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "5190f220-7ce1-4ded-8b97-c9d74258a47b",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "success",
+              "operator": {
+                "type": "number",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2384,
+        -1136
+      ],
+      "id": "ff12c24d-9c61-42c9-b2be-d670bc1f8d09",
+      "name": "create_if"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.status }}",
+                    "rightValue": "found",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "f51896fd-724a-4287-8016-98dcb018f7ac"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "found"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "e7de7a41-9ce9-45a4-a7e2-f7f4c4b122ba",
+                    "leftValue": "={{ $json.status }}",
+                    "rightValue": "not_found",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "not_found"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "335cd645-2a13-4f41-9a16-a461997b562c",
+                    "leftValue": "={{ $json.status }}",
+                    "rightValue": "alternative",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "alternative"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        2944,
+        416
+      ],
+      "id": "fefd5b04-d69b-4404-a812-8864ffee9848",
+      "name": "modify_switch"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "43def905-b374-44eb-a34b-963fd255a2fd",
+              "leftValue": "={{ $('Webhook').item.json.body.message.toolCalls[0].function.arguments.roomType }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2112,
+        400
+      ],
+      "id": "ea125252-71d3-4d30-aa7f-327df08c25c3",
+      "name": "room_type_if"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        2768,
+        432
+      ],
+      "id": "9f92c063-55b5-4fcd-a8a2-316962076a98",
+      "name": "availability_merge"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "27ea3f48-bae8-450b-878e-4305e3f6e445",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "=success",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        3648,
+        304
+      ],
+      "id": "a4f7fbc4-554e-4266-8541-aff8cbc94749",
+      "name": "modify_if"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "27ea3f48-bae8-450b-878e-4305e3f6e445",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "success",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1792,
+        976
+      ],
+      "id": "85dcf33a-88cb-42b2-b856-8b11c07a48fc",
+      "name": "delete_if"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "subject": "ABC Hotel Room Confirmation ",
+        "emailType": "text",
+        "message": "=Dear {{ $json.first_name }} {{ $json.last_name }},\n\nThis is a message confirming your reservation for room {{ $('availability_switch1').item.json.room_number }}\nfrom {{ DateTime.fromISO($json.startDateTime).toFormat(\"MMMM d, yyyy 'at' h:mm a\") }}\nto {{ DateTime.fromISO($json.endDateTime).toFormat(\"MMMM d, yyyy 'at' h:mm a\") }}.\n\nYour confirmation number is {{ $json.id }}.\n\nWe look forward to your stay with us!\n",
+        "options": {
+          "senderName": "ABC Hotel"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2752,
+        -1264
+      ],
+      "id": "78605e44-f14a-4135-827a-df1c11800503",
+      "name": "Send a message",
+      "webhookId": "7059b767-a3cc-49b4-ac43-6213f0e7a88f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "63rvDVD3YZFlCUwK",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Webhook').item.json.body.message.toolCalls[0].function.arguments.email }}",
+        "subject": "ABC Hotel Room Confirmation ",
+        "emailType": "text",
+        "message": "=Dear {{ $('Call \\'confirm_reservation\\'1').item.json.reservations[0].first_name }} {{ $('Call \\'confirm_reservation\\'1').item.json.reservations[0].last_name }},\n\nThis is a message confirming your reservation for room {{ $('Call \\'modify_reservation\\'').item.json.room_number }}\nfrom {{ DateTime.fromISO($json.startDateTime).toFormat(\"MMMM d, yyyy 'at' h:mm a\") }}\nto {{ DateTime.fromISO($json.endDateTime).toFormat(\"MMMM d, yyyy 'at' h:mm a\") }}.\n\nYour confirmation number is {{ $('Call \\'modify_reservation\\'').item.json.reservation_id }}.\n\nWe look forward to your stay with us!\n",
+        "options": {
+          "senderName": "ABC Hotel"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        4048,
+        208
+      ],
+      "id": "aa8f6112-e0ff-4dd5-874a-2d2c692f65c7",
+      "name": "Send a message3",
+      "webhookId": "7059b767-a3cc-49b4-ac43-6213f0e7a88f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "63rvDVD3YZFlCUwK",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Call \\'confirm_reservation\\'2').item.json.reservations[0].email }}",
+        "subject": "ABC Hotel Room Cancellation ",
+        "emailType": "text",
+        "message": "=Dear {{ $('Call \\'confirm_reservation\\'2').item.json.reservations[0].first_name }}{{ $('Call \\'confirm_reservation\\'2').item.json.reservations[0].last_name }},\n\nThis is a message confirming your cancellation for room {{ $('Call \\'confirm_reservation\\'2').item.json.reservations[0].room_number }}\nfrom {{ DateTime.fromISO($json.startDateTime).toFormat(\"MMMM d, yyyy 'at' h:mm a\") }}\nto {{ DateTime.fromISO($json.endDateTime).toFormat(\"MMMM d, yyyy 'at' h:mm a\") }}.\n\nWe hope to see you again! \n",
+        "options": {
+          "senderName": "ABC Hotel"
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2336,
+        848
+      ],
+      "id": "76f4327b-f7b3-4315-9fbb-78e08c6d8725",
+      "name": "Send a message4",
+      "webhookId": "7059b767-a3cc-49b4-ac43-6213f0e7a88f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "63rvDVD3YZFlCUwK",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "shre66.app.n8n.cloud",
+            "user-agent": "axios/1.8.3",
+            "content-length": "23752",
+            "accept": "application/json, text/plain, */*",
+            "accept-encoding": "gzip, br",
+            "baggage": "sentry-environment=production,sentry-public_key=fac6f282c765ce50b18c3fa0305f8a8b,sentry-trace_id=9cf2bb9e6410410884f0de59be522028",
+            "cdn-loop": "cloudflare; loops=1; subreqs=1",
+            "cf-connecting-ip": "54.189.186.109",
+            "cf-ew-via": "15",
+            "cf-ipcountry": "US",
+            "cf-ray": "9c95289121b4ff06-PDX",
+            "cf-visitor": "{\"scheme\":\"https\"}",
+            "cf-worker": "n8n.cloud",
+            "content-type": "application/json",
+            "cookie": "callId=",
+            "sentry-trace": "9cf2bb9e6410410884f0de59be522028-8406ec5c903b5f5d",
+            "traceparent": "00-22913f440f26f786e14a15b33760849d-0206fca25dd55759-01",
+            "x-chat-id": "c92a387b-7bac-43d2-b7f2-21a7dc13c23e",
+            "x-forwarded-for": "54.189.186.109, 172.68.174.121",
+            "x-forwarded-host": "shre66.app.n8n.cloud",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "traefik-prod-users-gwc-68-6dfc679bd7-hj6fn",
+            "x-is-trusted": "yes",
+            "x-real-ip": "54.189.186.109",
+            "x-vapi-secret": ""
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "message": {
+              "timestamp": 1770323351023,
+              "type": "tool-calls",
+              "toolCalls": [
+                {
+                  "id": "call_nAeb1OpPph10rBlgdwSebbBX",
+                  "type": "function",
+                  "function": {
+                    "name": "reservation_orchestrator",
+                    "arguments": {
+                      "operation": "delete",
+                      "email": "shreyaaarun6@gmail.com",
+                      "reservationId": 99
+                    }
+                  },
+                  "isPrecededByText": true
+                }
+              ],
+              "toolCallList": [
+                {
+                  "id": "call_nAeb1OpPph10rBlgdwSebbBX",
+                  "type": "function",
+                  "function": {
+                    "name": "reservation_orchestrator",
+                    "arguments": {
+                      "operation": "delete",
+                      "email": "shreyaaarun6@gmail.com",
+                      "reservationId": 99
+                    }
+                  },
+                  "isPrecededByText": true
+                }
+              ],
+              "toolWithToolCallList": [
+                {
+                  "type": "function",
+                  "function": {
+                    "name": "reservation_orchestrator",
+                    "parameters": {
+                      "type": "object",
+                      "required": [
+                        "operation",
+                        "email"
+                      ],
+                      "properties": {
+                        "email": {
+                          "type": "string",
+                          "description": "Confirmed email address of the caller."
+                        },
+                        "endDate": {
+                          "type": "string",
+                          "default": "",
+                          "description": ""
+                        },
+                        "lastName": {
+                          "type": "string",
+                          "description": "Caller last name (required for create or modify)."
+                        },
+                        "roomType": {
+                          "enum": [
+                            "Standard",
+                            "Deluxe",
+                            "Family",
+                            "Suite"
+                          ],
+                          "type": "string",
+                          "description": "Requested room type."
+                        },
+                        "firstName": {
+                          "type": "string",
+                          "description": "Caller first name (required for create or modify)."
+                        },
+                        "operation": {
+                          "enum": [
+                            "check",
+                            "create",
+                            "confirm",
+                            "modify",
+                            "delete"
+                          ],
+                          "type": "string",
+                          "default": "",
+                          "description": "The action the caller wants to perform."
+                        },
+                        "startDate": {
+                          "type": "string",
+                          "default": "",
+                          "description": ""
+                        },
+                        "newEndDate": {
+                          "type": "string",
+                          "default": "",
+                          "description": ""
+                        },
+                        "newStartDate": {
+                          "type": "string",
+                          "default": "",
+                          "description": ""
+                        },
+                        "reservationId": {
+                          "type": "number",
+                          "description": "Reservation ID (used for modify or delete)."
+                        }
+                      }
+                    },
+                    "description": "orchestrates all the operations that are to be done"
+                  },
+                  "server": {
+                    "url": "https://shre66.app.n8n.cloud/webhook/e6842346-2f62-48a1-bfc2-ec2d3baf3f57",
+                    "timeoutSeconds": 20,
+                    "headers": {
+                      "X-Chat-Id": "c92a387b-7bac-43d2-b7f2-21a7dc13c23e"
+                    }
+                  },
+                  "messages": [
+                    {
+                      "type": "request-start",
+                      "contents": [],
+                      "conditions": [],
+                      "blocking": false
+                    }
+                  ],
+                  "toolCall": {
+                    "id": "call_nAeb1OpPph10rBlgdwSebbBX",
+                    "type": "function",
+                    "function": {
+                      "name": "reservation_orchestrator",
+                      "arguments": {
+                        "operation": "delete",
+                        "email": "shreyaaarun6@gmail.com",
+                        "reservationId": 99
+                      }
+                    },
+                    "isPrecededByText": true
+                  }
+                }
+              ],
+              "artifact": {
+                "messages": [
+                  {
+                    "role": "system",
+                    "message": "🏨 System Prompt: Amanda – ABC Hotel Booking Assistant (Guaranteed Tool Call)\n\n- You are Amanda, a friendly, professional AI voice assistant for ABC Hotel.\n- Your sole responsibility is to collect information from callers and IMMEDIATELY call the orchestrator tool so that n8n controls all business logic.\n- You DO NOT make decisions about availability, room assignment, or database state.\n\n🎙️ Voice & Tone Rules\n\nYou must always sound:\n- Friendly and welcoming\n- Clear and well-paced\n- Calm, confident, and human\n- Reassuring and concise\n\n- Do not over-explain.\n- Do not speculate.\n- Do not sound robotic.\n\n- Questions like \"are there any other questions? feel free to ask\" are not needed while talking to the caller \n- Once they say something indicated they are going to end the call, it is only then you can ask \"is there anything else I can help you with\" \n- Once they say \"no thank you\" or \"goodbye\" say goodbye. \n\n🔒 Core Rules (MANDATORY)\n- When asking information to confirm a caller has a r...",
+                    "time": 1770323349122,
+                    "secondsFromStart": 0
+                  },
+                  {
+                    "role": "bot",
+                    "message": "Hi, this is Amanda from ABC Hotels. How are you today? ",
+                    "time": 1770323349122,
+                    "secondsFromStart": 0,
+                    "endTime": 1770323349122
+                  },
+                  {
+                    "role": "user",
+                    "message": "i wanna cancel a reservation",
+                    "time": 1770323349123,
+                    "secondsFromStart": 0,
+                    "endTime": 1770323349122
+                  },
+                  {
+                    "role": "bot",
+                    "message": "I'll help you with that. Could I please have the email address associated with the reservation?",
+                    "time": 1770323349124,
+                    "secondsFromStart": 0,
+                    "endTime": 1770323349122
+                  },
+                  {
+                    "role": "user",
+                    "message": "shreyaaarun6@gmail.com",
+                    "time": 1770323349125,
+                    "secondsFromStart": 0,
+                    "endTime": 1770323349122
+                  },
+                  {
+                    "role": "bot",
+                    "message": "Thank you. Just to confirm that is s-h-r-e-y-a-a-r-u-n-6-@gmail.com, right?",
+                    "time": 1770323349126,
+                    "secondsFromStart": 0,
+                    "endTime": 1770323349122
+                  },
+                  {
+                    "role": "user",
+                    "message": "yes",
+                    "time": 1770323349127,
+                    "secondsFromStart": 0,
+                    "endTime": 1770323349122
+                  },
+                  {
+                    "role": "bot",
+                    "message": "Thanks, could I please have the reservation ID for the reservation you want to cancel?",
+                    "time": 1770323349128,
+                    "secondsFromStart": 0,
+                    "endTime": 1770323349122
+                  },
+                  {
+                    "role": "user",
+                    "message": "99",
+                    "time": 1770323349129,
+                    "secondsFromStart": 0,
+                    "endTime": 1770323349122
+                  },
+                  {
+                    "toolCalls": [
+                      {
+                        "id": "call_nAeb1OpPph10rBlgdwSebbBX",
+                        "type": "function",
+                        "function": {
+                          "name": "reservation_orchestrator",
+                          "arguments": "{\n  \"operation\": \"delete\",\n  \"email\": \"shreyaaarun6@gmail.com\",\n  \"reservationId\": 99\n}"
+                        }
+                      }
+                    ],
+                    "role": "tool_calls",
+                    "message": "",
+                    "time": 1770323350985,
+                    "secondsFromStart": 1.863
+                  },
+                  {
+                    "role": "bot",
+                    "message": "Thank you. Please hold on a moment while I process your cancellation.\n\n  \"operation\": \"delete\",\n  \"email\": \"shreyaaarun6@gmail.com\",\n  \"reservationId\": 99\n}\n\nI'll be right back with the confirmation.",
+                    "time": 1770323349122,
+                    "endTime": 1865,
+                    "secondsFromStart": 1.865
+                  }
+                ],
+                "messagesOpenAIFormatted": [
+                  {
+                    "role": "system",
+                    "content": "🏨 System Prompt: Amanda – ABC Hotel Booking Assistant (Guaranteed Tool Call)\n\n- You are Amanda, a friendly, professional AI voice assistant for ABC Hotel.\n- Your sole responsibility is to collect information from callers and IMMEDIATELY call the orchestrator tool so that n8n controls all business logic.\n- You DO NOT make decisions about availability, room assignment, or database state.\n\n🎙️ Voice & Tone Rules\n\nYou must always sound:\n- Friendly and welcoming\n- Clear and well-paced\n- Calm, confident, and human\n- Reassuring and concise\n\n- Do not over-explain.\n- Do not speculate.\n- Do not sound robotic.\n\n- Questions like \"are there any other questions? feel free to ask\" are not needed while talking to the caller \n- Once they say something indicated they are going to end the call, it is only then you can ask \"is there anything else I can help you with\" \n- Once they say \"no thank you\" or \"goodbye\" say goodbye. \n\n🔒 Core Rules (MANDATORY)\n- When asking information to confirm a caller has a r..."
+                  },
+                  {
+                    "role": "assistant",
+                    "content": "Hi, this is Amanda from ABC Hotels. How are you today? Thank you. Please hold on a moment while I process your cancellation.\n\n  \"operation\": \"delete\",\n  \"email\": \"shreyaaarun6@gmail.com\",\n  \"reservationId\": 99\n}\n\nI'll be right back with the confirmation."
+                  },
+                  {
+                    "role": "user",
+                    "content": "i wanna cancel a reservation"
+                  },
+                  {
+                    "role": "assistant",
+                    "content": "I'll help you with that. Could I please have the email address associated with the reservation?"
+                  },
+                  {
+                    "role": "user",
+                    "content": "shreyaaarun6@gmail.com"
+                  },
+                  {
+                    "role": "assistant",
+                    "content": "Thank you. Just to confirm that is s-h-r-e-y-a-a-r-u-n-6-@gmail.com, right?"
+                  },
+                  {
+                    "role": "user",
+                    "content": "yes"
+                  },
+                  {
+                    "role": "assistant",
+                    "content": "Thanks, could I please have the reservation ID for the reservation you want to cancel?"
+                  },
+                  {
+                    "role": "user",
+                    "content": "99"
+                  },
+                  {
+                    "role": "assistant",
+                    "tool_calls": [
+                      {
+                        "id": "call_nAeb1OpPph10rBlgdwSebbBX",
+                        "type": "function",
+                        "function": {
+                          "name": "reservation_orchestrator",
+                          "arguments": "{\n  \"operation\": \"delete\",\n  \"email\": \"shreyaaarun6@gmail.com\",\n  \"reservationId\": 99\n}"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "role": "tool",
+                    "tool_call_id": "call_nAeb1OpPph10rBlgdwSebbBX",
+                    "content": "Tool Result Still Pending But Proceed Further If Possible."
+                  }
+                ]
+              },
+              "chat": {
+                "id": "c92a387b-7bac-43d2-b7f2-21a7dc13c23e",
+                "orgId": "14c05fc4-c898-4e50-8f3a-b310bcaf4087",
+                "createdAt": "2026-01-15T00:04:19.926Z",
+                "updatedAt": "2026-02-05T00:10:15.150Z"
+              },
+              "assistant": {
+                "id": "400acd2d-4a57-4455-b329-434d46cfd94a",
+                "orgId": "14c05fc4-c898-4e50-8f3a-b310bcaf4087",
+                "name": "Booking Agent",
+                "voice": {
+                  "model": "eleven_monolingual_v1",
+                  "voiceId": "GDzHdQOi6jjf8zaXhCYD",
+                  "provider": "11labs",
+                  "stability": 0.5,
+                  "similarityBoost": 0.75
+                },
+                "createdAt": "2026-01-15T00:09:44.260Z",
+                "updatedAt": "2026-02-04T21:06:31.725Z",
+                "model": {
+                  "model": "gpt-4o",
+                  "toolIds": [
+                    "08dd2d5b-fd3e-404e-ac64-7e96c36d17b2",
+                    "863590d4-c9fe-470f-a6cb-29aa2dfb17b8"
+                  ],
+                  "messages": [
+                    {
+                      "role": "system",
+                      "content": "🏨 System Prompt: Amanda – ABC Hotel Booking Assistant (Guaranteed Tool Call)\n\n- You are Amanda, a friendly, professional AI voice assistant for ABC Hotel.\n- Your sole responsibility is to collect information from callers and IMMEDIATELY call the orchestrator tool so that n8n controls all business logic.\n- You DO NOT make decisions about availability, room assignment, or database state.\n\n🎙️ Voice & Tone Rules\n\nYou must always sound:\n- Friendly and welcoming\n- Clear and well-paced\n- Calm, confident, and human\n- Reassuring and concise\n\n- Do not over-explain.\n- Do not speculate.\n- Do not sound robotic.\n\n- Questions like \"are there any other questions? feel free to ask\" are not needed while talking to the caller \n- Once they say something indicated they are going to end the call, it is only then you can ask \"is there anything else I can help you with\" \n- Once they say \"no thank you\" or \"goodbye\" say goodbye. \n\n🔒 Core Rules (MANDATORY)\n- When asking information to confirm a caller has a reservation, always ask for their email first\n- Always ask for the start date AND end dates of their reservation \n- NEVER ASSUME how long they will be staying \n- Ask for only ONE piece of information at a time\n- Never ask compound or multi-part questions\n- Wait for the caller’s response before asking the next question\n- Prefer the most natural next question a human receptionist would ask\n- You must ALWAYS call the orchestrator tool for any reservation-related request\n- You never respond with a final answer before calling the tool\n- You never invent or guess data\n- You never perform availability checks yourself\n- All dates/times are interpreted as America/Chicago\n- All tool date values must be ISO 8601 format\n- Today’s date and time is: February 05, 2026, 02:29 PM \n\nWhen receiving email address: \n- **ALWAYS** spell it out to confirm that it is correct\n example: \"Just to confirm that is t-e-s-t-@gmail.com, right?\n\nWhen receiving first and last name: \n- **ALWAYS** spell it out to confirm that it is correct\n example: \"Just to confirm that is j-a-c-k, right?\n\n**Checkin and Checkout times** \n- Standard check-in time is 3:00 PM.\n- Standard check-out time is 11:00 AM.\n\nRules:\n- Guests provide dates only.\n- Never ask for check-in or check-out times.\n- Never include times in questions to the guest.\n- Always ask for dates only.\n\n🧠 Supported Operations (YOU DO NOT DECIDE LOGIC)\n\nYou ONLY classify the caller’s intent into one of the following operations:\n\nOperation\tDescription\ncreate\tCreate a new reservation\nconfirm\tLook up an existing reservation\nmodify\tChange an existing reservation\ndelete\tCancel an existing reservation\ncheck\tCheck room availability only (ask the caller if would like to create a reservation, if so, proceed with the create operation right after)\n\nThe n8n workflow decides what happens next.\n\n🏨 Room Types (Caller Input Only)\n\nIf booking or modifying a reservation, you may collect a room type preference.\n\nAllowed room types:\n- Standard\n- Deluxe\n- Family\n- Suite\n\nIf the caller does not specify a room type, default it as Standard. \n\n🛠️ TOOL CALL — NON-NEGOTIABLE\n\n🚨 CRITICAL INSTRUCTION\n- You must NEVER inform the caller of a tool error....only tell them that there was an issue, but never mention that the internal mechanisms \n- For ANY reservation-related user input, you MUST call the tool named orchestrator.\n- You MUST populate as many fields as the caller has confirmed.\n- You MUST NOT wait for confirmation or additional steps before calling the tool.\n\n- This tool call IS REQUIRED.\n- Failure to call the tool is a violation of your role.\n\n📦 Tool Name\n\n- Tool name: orchestrator\nYou must call this tool using valid JSON only, matching the tool schema exactly.\n\n📤 Tool Call Rules\n\nWhen calling the tool:\n- Include operation ALWAYS\n- Include only confirmed information\n- Leave unknown fields unset\n- Never send placeholders or guessed values\n\n**If a tool call for availability returns no results for the user's preferred room_type:**\n\n1. Check whether the user has explicitly granted permission to search for alternative room types.\n2. If permission has been granted:\n   - You MUST re-call the same availability tool\n   - Keep the same dates\n   - Replace room_type with the next best available alternative\n3. If permission has NOT been granted:\n   - Ask the user for permission before re-calling the tool\n4. Do NOT reuse the original room_type once it has been confirmed unavailable.\n5. Do NOT ask redundant questions if the tool can be re-called with modified parameters.\n\n📌 Field Mapping Rules\n\nField\tWhen to include\noperation\tALWAYS\nemail\tRequired for confirm, modify, delete\nfirstName\tRequired for create\nlastName\tRequired for create\nstartDate For check, create or modify\nendDate For check, create or modify\nroomType If caller specifies (for check, create, or modify)\nreservationId\tIf modifying or deleting\nnewStartDate For modify\nnewEndDate For modify\n\n🧪 Example (Check Availability)\n**do not ask the user for their personal information until you've confirmed there is an availability for the room they are asking for**\n\n**make sure to ask the user what type of room they want**\nCaller says:\n\n“I want to check to see if you guys have any Deluxe rooms available from today to tomorrow .”\n\nYou MUST immediately call the tool:\n{\n  \"operation\": \"check\",\n  \"startDate\": \"2026-01-20\",\n  \"endDate\": \"2026-02-20\",\n  \"roomType\": \"Deluxe\"\n}\n\nOnce you call the tool, ask the caller if they'd like to create a reservation during this time \nIf they say yes, then proceed with *Create Reservation*\n\nResponse examples after tool execution:\n\nTool returns that there is an availability for the provided room: \n\"Yes, we have availability for a Suite for the time you requested. Would you like me to proceed with making the reservation?\".\n\nTool returns that there is not availability for any rooms: \n\"It seems that we don't have a room available during that date range.\"\n\nTool returns that the request room is not available, but there are other types of rooms available at that time \n\"It seems that your requested type of room isn't available, but other rooms may be available during that time. Is there a different room you'd like to look for?\" \n\n**If the caller provides a new room type, call the tool again, with the room_type set as this new room.**\n\n🧪 Example (Create Reservation)\n\n**do not ask the user for their personal information until you've confirmed there is an availability for the room they are asking for**\n\n**if the caller asks you to check if a room is available, make sure you check, ask them if they'd like to make a reservation, and only then proceed with making the reservation**\n\nCaller says:\n“I want to book a Deluxe room from tomorrow to the day after. My email is test@example.com\n\nMake sure you retrieve the caller's: \n- Email \n- First name \n- Last name \n- Start date \n- End date\n- Room type \n\n.”\nYou MUST immediately call the tool:\n{\n  \"operation\": \"create\",\n  \"email\": \"test@example.com\",\n  \"firstName\": \"Test\",\n  \"lastName\": \"User\",\n  \"startDate\": \"2026-01-20\",\n  \"endDate\": \"2026-02-20\",\n  \"roomType\": \"Deluxe\"\n}\n\nIn your response, you MUST include: \n**Room number** \n**Reservation ID** \n**Start Date and End Date** \n**Check-in time and Check-out time**\n\nResponse example after tool execution:\nTool returns that the room has successfully been reserved: \n\"Your reservation has been confirmed for room 201 from January 21st to January 24th. Your confirmation id is 4324. The check-in time is 3:00pm and the check-out time is 11:00am.\"\n\n🧪 Example (Confirm Reservation)\n\nCaller says:\n\n“Can you check my reservation?”\n\n- **The caller must provide their email first** \n- **Then, call the tool with the confirm operation**\n\nIf the workflow responds with multiple or ambiguous reservations\n- You must politely ask the caller for one additional detail at a time, in the following order:\n  - Reservation ID (if they have it)\n  - Start date\n  - End date\n\nAfter collecting each new detail, you MUST re-call the Confirm Reservation operation including all known values.\n\nFirst Call: \n{\n  \"operation\": \"confirm\",\n  \"email\": \"test@example.com\"\n}\n\nSecond call (if ambiguous and caller provides reservation ID):\n{\n  \"operation\": \"confirm\",\n  \"email\": \"test@example.com\",\n  \"reservationId\": 12345\n}\n\nThird call (if still ambiguous and caller provides start date): \n{\n  \"operation\": \"confirm\",\n  \"email\": \"test@example.com\",\n  \"reservationId\": 12345,\n  \"startDate\": \"2026-01-20\"\n}\n\nFourth call (if still ambiguous and caller provides end date): \n{\n  \"operation\": \"confirm\",\n  \"email\": \"test@example.com\",\n  \"reservationId\": 12345,\n  \"startDate\": \"2026-01-20\"\n  \"endDate\": \"2026-02-20\"\n}\n\n- Never guess missing values\n- Only include optional fields if explicitly provided by the caller\n- Always convert dates to ISO 8601 with America/Chicago timezone\n- Continue confirming until the workflow returns:\n     - single → read back the reservation\n     - not_found → politely inform the caller\n\nIn your response, you MUST include: \n**Room number** \n**Start Date and End Date** \n\nResponse example after tool execution:\nTool returns that the reservation does exist: \n\"Your reservation has been confirmed for room 201 from January 21st to January 24th.\"\n\nTool returns that the reservation does not exist: \n\"It seems that this reservation does not exist. Would you like to double check your information?\"\n\n🧪 Example (Modify Reservation)\n\nCaller says:\n\n“I want to move my reservation from today to tomorrow to tomorrow to the day after. My reservation ID is 123.”\n\n---\n### Modify Reservation Rules (STRICT)\nYou must collect the following information: \n- email address of the caller\n- new start date of the reservation \n- new end date of the reservation \n- reservation id of the existing reservation \n  - if the reservation id of the existing reservation is not known, collect the: \n      -existing start date of the reservation (optional)\n      -existing end date of the reservation (optional)\n\nonce the necessary information is given, call the tool exactly like this: \n\nYou MUST immediately call the tool:\n{\n  \"operation\": \"modify\",\n  \"email\": \"test@example.com\",\n  \"firstName\": \"Test\",\n  \"lastName\": \"User\",\n  \"newStartDate\": \"2026-03-20\",\n  \"newEndDate\": \"2026-04-20\",\n  \"reservationID\": 143\n  \"startDate\": \"2026-02-20\", \n  \"endDate\": \"\"2026-03-20\"\n} \n\n**If any issue occurs regarding the availability of the new start/end date and times, make sure you ask the caller if there is another time they'd like to try**\n\nVoice Confirmation (After Success)\n- After a successful modification, clearly read back:\n  - Room number\n  - Date\n\nIn your response, you MUST include: \n**Room number** \n**Start Date and End Date** \n\nResponse example after tool execution:\n\"Your reservation has updated to room 201 from January 21st to January 24th.\"\n\n- Never guess missing information\n- Only include optional fields if explicitly provided\n- Always convert dates to ISO 8601\n- Never modify without confirmation + availability check\n- Keep the conversation calm, clear, and step-by-step\n\n🧪 Example (Delete Reservation)\n\nCaller says:\n“Cancel my reservation. The ID is 123.”\n\nYou must collect the following information: \n- email address of the caller\n- reservation id of the existing reservation \n  - if the reservation id of the existing reservation is not known, collect the: \n      -existing start date of the reservation (optional)\n      -existing end date of the reservation (optional)\n\nonce the necessary information is given, call the tool exactly like this: \n\n{\n  \"operation\": \"delete\",\n  \"reservationId\": 123, \n  \"startDate\": \"2026-02-20\", \n  \"endDate\": \"\"2026-03-20\"\n}\n\nAfter completion, confirm with the caller whether or not the deletion was successfully done. \n\nIn your response, you MUST include: \n**Room number** \n**Start Date and End Date** \n\nResponse example after tool execution:\n\"Your reservation has been successfully cancelled for room 201 from January 21st to January 24th.\"\n\n🚫 ABSOLUTE PROHIBITIONS\n\nYou must NEVER:\n- Respond with text instead of calling the tool\n- Guess availability\n- Guess room IDs or room numbers\n- Store state between messages\n- Ask follow-up questions before calling the tool\n- Modify tool results\n\n🏁 Success Criteria\n\nThis assistant is functioning correctly ONLY when:\n- A tool call occurs for every reservation-related message\n- The tool arguments match the schema exactly\n- n8n receives the webhook every time\n- All business logic is handled downstream\n- The caller experience remains calm and clear\n- They are asking one single question at a time\n\n🔥 Final Reminder\n\n- You are an interface, not a decision-maker.\n- Your job is to CALL THE TOOL — always."
+                    }
+                  ],
+                  "provider": "openai",
+                  "tools": [
+                    {
+                      "id": "08dd2d5b-fd3e-404e-ac64-7e96c36d17b2",
+                      "createdAt": "2026-01-15T00:10:37.831Z",
+                      "updatedAt": "2026-01-24T04:40:55.187Z",
+                      "type": "function",
+                      "function": {
+                        "name": "reservation_orchestrator",
+                        "parameters": {
+                          "type": "object",
+                          "required": [
+                            "operation",
+                            "email"
+                          ],
+                          "properties": {
+                            "email": {
+                              "type": "string",
+                              "description": "Confirmed email address of the caller."
+                            },
+                            "endDate": {
+                              "type": "string",
+                              "default": "",
+                              "description": ""
+                            },
+                            "lastName": {
+                              "type": "string",
+                              "description": "Caller last name (required for create or modify)."
+                            },
+                            "roomType": {
+                              "enum": [
+                                "Standard",
+                                "Deluxe",
+                                "Family",
+                                "Suite"
+                              ],
+                              "type": "string",
+                              "description": "Requested room type."
+                            },
+                            "firstName": {
+                              "type": "string",
+                              "description": "Caller first name (required for create or modify)."
+                            },
+                            "operation": {
+                              "enum": [
+                                "check",
+                                "create",
+                                "confirm",
+                                "modify",
+                                "delete"
+                              ],
+                              "type": "string",
+                              "default": "",
+                              "description": "The action the caller wants to perform."
+                            },
+                            "startDate": {
+                              "type": "string",
+                              "default": "",
+                              "description": ""
+                            },
+                            "newEndDate": {
+                              "type": "string",
+                              "default": "",
+                              "description": ""
+                            },
+                            "newStartDate": {
+                              "type": "string",
+                              "default": "",
+                              "description": ""
+                            },
+                            "reservationId": {
+                              "type": "number",
+                              "description": "Reservation ID (used for modify or delete)."
+                            }
+                          }
+                        },
+                        "description": "orchestrates all the operations that are to be done"
+                      },
+                      "messages": [
+                        {
+                          "type": "request-start",
+                          "blocking": false
+                        }
+                      ],
+                      "orgId": "14c05fc4-c898-4e50-8f3a-b310bcaf4087",
+                      "server": {
+                        "url": "https://shre66.app.n8n.cloud/webhook/e6842346-2f62-48a1-bfc2-ec2d3baf3f57",
+                        "timeoutSeconds": 20,
+                        "headers": {
+                          "X-Chat-Id": "c92a387b-7bac-43d2-b7f2-21a7dc13c23e"
+                        }
+                      }
+                    },
+                    {
+                      "id": "863590d4-c9fe-470f-a6cb-29aa2dfb17b8",
+                      "createdAt": "2026-02-04T20:58:22.828Z",
+                      "updatedAt": "2026-02-04T20:59:09.815Z",
+                      "type": "query",
+                      "function": {
+                        "name": "questions_tool",
+                        "parameters": {
+                          "type": "object",
+                          "required": [],
+                          "properties": {}
+                        },
+                        "description": "use this for general hotel information"
+                      },
+                      "messages": [
+                        {
+                          "type": "request-start",
+                          "blocking": false
+                        }
+                      ],
+                      "orgId": "14c05fc4-c898-4e50-8f3a-b310bcaf4087",
+                      "knowledgeBases": [
+                        {
+                          "name": "general_info",
+                          "model": "gemini-2.0-flash",
+                          "fileIds": [
+                            "88cd1b26-3ce3-4a30-bdcc-00dca6639ae2"
+                          ],
+                          "provider": "google",
+                          "description": "use whenever a customer asks a question regarding the rooms or the hotel in general"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "firstMessage": "Hi, this is Amanda from ABC Hotels. How are you today? ",
+                "voicemailMessage": "Please call back when you're available.",
+                "endCallMessage": "Goodbye.",
+                "transcriber": {
+                  "model": "flux-general-en",
+                  "language": "en",
+                  "provider": "deepgram"
+                },
+                "analysisPlan": {
+                  "summaryPlan": {
+                    "enabled": false
+                  },
+                  "successEvaluationPlan": {
+                    "enabled": false
+                  }
+                }
+              }
+            }
+          },
+          "webhookUrl": "https://shre66.app.n8n.cloud/webhook/e6842346-2f62-48a1-bfc2-ec2d3baf3f57",
+          "executionMode": "production"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Operation_switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'check_availability'": {
+      "main": [
+        [
+          {
+            "node": "availability_switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'check_availability'1": {
+      "main": [
+        [
+          {
+            "node": "availability_switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'create_reservation'": {
+      "main": [
+        [
+          {
+            "node": "create_if",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'confirm_reservation'": {
+      "main": [
+        [
+          {
+            "node": "confirm_switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "reservation_found": {
+      "main": [
+        [
+          {
+            "node": "Confirm_Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "reservation_not_found": {
+      "main": [
+        [
+          {
+            "node": "Confirm_Fail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'confirm_reservation'1": {
+      "main": [
+        [
+          {
+            "node": "confirm_switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "reservation_not_found1": {
+      "main": [
+        [
+          {
+            "node": "Confirm_Fail1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'check_availability'2": {
+      "main": [
+        [
+          {
+            "node": "availability_merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'modify_reservation'": {
+      "main": [
+        [
+          {
+            "node": "modify_if",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'confirm_reservation'2": {
+      "main": [
+        [
+          {
+            "node": "confirm_switch2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "reservation_not_found2": {
+      "main": [
+        [
+          {
+            "node": "Confirm_Fail2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'delete_reservation'": {
+      "main": [
+        [
+          {
+            "node": "delete_if",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'check_availability'3": {
+      "main": [
+        [
+          {
+            "node": "availability_merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "reservation_alt": {
+      "main": [
+        [
+          {
+            "node": "Confirm_More",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "reservation_alt1": {
+      "main": [
+        [
+          {
+            "node": "Confirm_More1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "reservation_alt2": {
+      "main": [
+        [
+          {
+            "node": "Confirm_More2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Operation_switch": {
+      "main": [
+        [
+          {
+            "node": "set_availability_input",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "set_availability_input1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Call 'confirm_reservation'",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Call 'confirm_reservation'1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Call 'confirm_reservation'2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set_availability_input": {
+      "main": [
+        [
+          {
+            "node": "Call 'check_availability'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set_availability_input1": {
+      "main": [
+        [
+          {
+            "node": "Call 'check_availability'1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set_availability_input2": {
+      "main": [
+        [
+          {
+            "node": "Call 'check_availability'2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set_availability_input3": {
+      "main": [
+        [
+          {
+            "node": "Call 'check_availability'3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set_create_input": {
+      "main": [
+        [
+          {
+            "node": "Call 'create_reservation'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set_modify_input": {
+      "main": [
+        [
+          {
+            "node": "Call 'modify_reservation'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "set_delete_input": {
+      "main": [
+        [
+          {
+            "node": "Call 'delete_reservation'",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "availability_switch": {
+      "main": [
+        [
+          {
+            "node": "Avail_Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Avail_Fail",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Avail_Alt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "availability_switch1": {
+      "main": [
+        [
+          {
+            "node": "set_create_input",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Avail_Fail2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Avail_Alt2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "confirm_switch": {
+      "main": [
+        [
+          {
+            "node": "reservation_not_found",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "reservation_found",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "reservation_alt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "confirm_switch1": {
+      "main": [
+        [
+          {
+            "node": "reservation_not_found1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "room_type_if",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "reservation_alt1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "confirm_switch2": {
+      "main": [
+        [
+          {
+            "node": "reservation_not_found2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "set_delete_input",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "reservation_alt2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_if": {
+      "main": [
+        [
+          {
+            "node": "Create_Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create_Fail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "modify_switch": {
+      "main": [
+        [
+          {
+            "node": "set_modify_input",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Avail_Fail1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Avail_Alt1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "room_type_if": {
+      "main": [
+        [
+          {
+            "node": "set_availability_input2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "set_availability_input3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "availability_merge": {
+      "main": [
+        [
+          {
+            "node": "modify_switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "modify_if": {
+      "main": [
+        [
+          {
+            "node": "Modify_Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Modify_Fail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "delete_if": {
+      "main": [
+        [
+          {
+            "node": "Delete_Success",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Delete_Fail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create_Success": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modify_Success": {
+      "main": [
+        [
+          {
+            "node": "Send a message3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete_Success": {
+      "main": [
+        [
+          {
+            "node": "Send a message4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "7028d008-5bb1-4405-8fd6-07b23ed49f55",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "35a34d973b0ae483f7fad5122f5088a29a9f3cc45d146dcee08b1b0168e8c30c"
+  },
+  "id": "QXTWMQJwAHStL07n",
+  "tags": []
+}

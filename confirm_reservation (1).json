@@ -1,0 +1,353 @@
+{
+  "name": "confirm_reservation",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f8af4167-3187-47dc-8e32-6bcd20b432d5",
+              "name": "email",
+              "value": "={{ $json.body.message.toolCalls[0].function.arguments.email }}",
+              "type": "string"
+            },
+            {
+              "id": "3dea8420-15a5-428e-9e7c-03754e24ea67",
+              "name": "startDate",
+              "value": "={{$json.body.message.toolCalls[0].function.arguments.startDate}}",
+              "type": "string"
+            },
+            {
+              "id": "9c302cb8-28df-4f30-8ad1-8e7d6773b4c5",
+              "name": "endDate",
+              "value": "={{$json.body.message.toolCalls[0].function.arguments.endDate}}",
+              "type": "string"
+            },
+            {
+              "id": "3ff6fb24-b5f9-4266-a02b-3c73d09231cd",
+              "name": "reservation_id",
+              "value": "={{ $json.body.message.toolCalls[0].function.arguments.reservationId}}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -704,
+        -560
+      ],
+      "id": "f07700be-eb03-4383-b782-f3df399a53f9",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://zhhrbxoqjgkwmbpfeojq.supabase.co/rest/v1/rpc/confirm_reservation",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "supabaseApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"filters\": {\n    \"email\": {{ $json.email ? `\"${$json.email}\"` : \"null\" }},\n    \"startDate\": {{ $json.startDate ? `\"${$json.startDate}\"` : \"null\" }},\n    \"endDate\": {{ $json.endDate ? `\"${$json.endDate}\"` : \"null\" }},\n    \"reservation_id\": {{ $json.reservation_id ? `\"${$json.reservation_id}\"` : \"null\" }}\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -528,
+        -560
+      ],
+      "id": "a91a72e9-5ded-4da1-89f0-b4997f6c7dff",
+      "name": "HTTP Request",
+      "credentials": {
+        "supabaseApi": {
+          "id": "ucKUnW7eP2SyTnrI",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -880,
+        -560
+      ],
+      "id": "285cc359-d408-45b1-b644-f2e81a4d080d",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the first item from the Switch node\nconst input = items[0].json;\n\n// Get the toolCallId from the original Webhook node\nconst toolCallId = $('Webhook').item.json.body.message.toolCalls[0].id;\n\n// Build the response object for multiple reservations\nconst response = {\n  results: [\n    {\n      toolCallId: toolCallId, // now correctly from the Webhook node\n      result: \"Multiple reservations found for this email. Please provide more details to identify the correct one.\",\n      reservations: input.reservations.map(res => ({\n        reservationId: res.id,\n        first_name: res.first_name,\n        last_name: res.last_name,\n        email: res.email,\n        room_id: res.room_id,\n        startDateTime: res.startDateTime,\n        endDateTime: res.endDateTime\n      }))\n    }\n  ]\n};\n\n// Return the response as a single item\nreturn [{ json: response }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        336,
+        -272
+      ],
+      "id": "e2a4b775-f966-4395-affb-c3342a4e97a7",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.count }}",
+                    "rightValue": 0,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    },
+                    "id": "5357f025-ab8f-443b-aa1d-227d901fee3e"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "069476b7-913e-4496-bac8-da8df8de9314",
+                    "leftValue": "={{ $json.count }}",
+                    "rightValue": 1,
+                    "operator": {
+                      "type": "number",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "0aef7d7f-ae96-40a8-b633-30e8a09668f7",
+                    "leftValue": "={{ $json.count }}",
+                    "rightValue": 1,
+                    "operator": {
+                      "type": "number",
+                      "operation": "gt"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        64,
+        -576
+      ],
+      "id": "0e43d73e-54c1-4706-8d23-f055279712d8",
+      "name": "Switch2"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        544,
+        -272
+      ],
+      "id": "3b28e9fd-198d-42f3-b4a5-df1b01ea988b",
+      "name": "report more"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        608,
+        -752
+      ],
+      "id": "a268eb37-ba3e-4b1b-a6c8-8571d8cb98b1",
+      "name": "report failure"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        608,
+        -544
+      ],
+      "id": "1bd98529-0944-4835-9833-5820148e39b2",
+      "name": "report success"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $('Webhook').item.json.body.message.toolCalls[0].id }}\",\n      \"result\": \"No reservation exists for this information. Would you like to make a new booking today?\"\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        336,
+        -752
+      ],
+      "id": "197351ed-431d-4b34-ba28-1796d0785a85",
+      "name": "reservation_not_found"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"results\": [\n    {\n      \"toolCallId\": \"{{ $('Webhook').item.json.body.message.toolCalls[0].id }}\",\n      \"result\": \"Reservation found for {{ $json.reservations[0].first_name }} {{ $json.reservations[0].last_name }} from {{ $json.reservations[0].startDateTime }} to {{ $json.reservations[0].endDateTime }} at room {{ $json.reservations[0].room_id }}. Your confirmation number is {{ $json.reservations[0].id }}\"\n    }\n  ]\n}\n",
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        336,
+        -544
+      ],
+      "id": "a1efe484-5a1f-4616-a2a6-45fb0af1d680",
+      "name": "reservation_found"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        []
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch2": {
+      "main": [
+        [
+          {
+            "node": "reservation_not_found",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "reservation_found",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "report more",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "reservation_not_found": {
+      "main": [
+        [
+          {
+            "node": "report failure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "reservation_found": {
+      "main": [
+        [
+          {
+            "node": "report success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "e4570dab-8f54-416e-ad26-2d0fbc4027fa",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "35a34d973b0ae483f7fad5122f5088a29a9f3cc45d146dcee08b1b0168e8c30c"
+  },
+  "id": "zL6FHWytWP1ltGBH",
+  "tags": []
+}
